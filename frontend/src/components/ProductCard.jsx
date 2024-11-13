@@ -4,20 +4,20 @@ import {
   Button,
   Heading,
   HStack,
+  VStack,
   IconButton,
   Image,
   Input,
   DialogRoot,
-  DialogBackdrop,
+  DialogTrigger,
   DialogCloseTrigger,
+  DialogActionTrigger,
   DialogHeader,
   DialogTitle,
   DialogBody,
   DialogContent,
   DialogFooter,
   Text,
-  useDisclosure,
-  VStack,
 } from "@chakra-ui/react";
 import { useColorModeValue } from "../components/ui/color-mode";
 import { toaster } from "../components/ui/toaster";
@@ -31,8 +31,6 @@ const ProductCard = ({ product }) => {
   const bg = useColorModeValue("white", "gray.800");
 
   const { deleteProduct, updateProduct } = useProductStore();
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleDeleteProduct = async (pid) => {
     const { success, message } = await deleteProduct(pid);
@@ -55,27 +53,26 @@ const ProductCard = ({ product }) => {
     }
   };
 
-  // const handleUpdateProduct = async (pid, updatedProduct) => {
-  //   const { success, message } = await updateProduct(pid, updatedProduct);
-  //   onClose();
-  //   if (!success) {
-  //     toaster.create({
-  //       title: "Error",
-  //       type: "error",
-  //       description: message,
-  //       duration: 3000,
-  //       isClosable: true,
-  //     });
-  //   } else {
-  //     toaster.create({
-  //       title: "Success",
-  //       type: "success",
-  //       description: "Product updated successfully",
-  //       duration: 3000,
-  //       isClosable: true,
-  //     });
-  //   }
-  // };
+  const handleUpdateProduct = async (pid, updatedProduct) => {
+    const { success, message } = await updateProduct(pid, updatedProduct);
+    if (!success) {
+      toaster.create({
+        title: "Error",
+        type: "error",
+        description: message,
+        duration: 3000,
+        isClosable: true,
+      });
+    } else {
+      toaster.create({
+        title: "Success",
+        type: "success",
+        description: "Product updated successfully",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
 
   return (
     <Box
@@ -104,9 +101,76 @@ const ProductCard = ({ product }) => {
         </Text>
 
         <HStack gap={2}>
-          <IconButton onClick={onOpen} colorPalette="purple" variant={"subtle"}>
-            <MdEdit />
-          </IconButton>
+          <DialogRoot>
+            <DialogTrigger asChild>
+              <IconButton colorPalette="purple" variant={"subtle"}>
+                <MdEdit />
+              </IconButton>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Update Product</DialogTitle>
+                <DialogCloseTrigger />
+              </DialogHeader>
+              <DialogBody>
+                <VStack gap={4}>
+                  <Input
+                    placeholder="Product Name"
+                    name="name"
+                    value={updatedProduct.name}
+                    onChange={(e) =>
+                      setUpdatedProduct({
+                        ...updatedProduct,
+                        name: e.target.value,
+                      })
+                    }
+                  />
+                  <Input
+                    placeholder="Price"
+                    name="price"
+                    type="number"
+                    value={updatedProduct.price}
+                    onChange={(e) =>
+                      setUpdatedProduct({
+                        ...updatedProduct,
+                        price: e.target.value,
+                      })
+                    }
+                  />
+                  <Input
+                    placeholder="Image URL"
+                    name="image"
+                    value={updatedProduct.image}
+                    onChange={(e) =>
+                      setUpdatedProduct({
+                        ...updatedProduct,
+                        image: e.target.value,
+                      })
+                    }
+                  />
+                </VStack>
+              </DialogBody>
+              <DialogFooter>
+                <DialogActionTrigger asChild>
+                  <Button
+                    colorPalette="purple"
+                    variant={"subtle"}
+                    mr={3}
+                    onClick={() =>
+                      handleUpdateProduct(product._id, updatedProduct)
+                    }
+                  >
+                    Update
+                  </Button>
+                </DialogActionTrigger>
+                <DialogActionTrigger asChild>
+                  <Button colorPalette="red" variant="subtle">
+                    Cancel
+                  </Button>
+                </DialogActionTrigger>
+              </DialogFooter>
+            </DialogContent>
+          </DialogRoot>
 
           <IconButton
             onClick={() => handleDeleteProduct(product._id)}
@@ -117,72 +181,6 @@ const ProductCard = ({ product }) => {
           </IconButton>
         </HStack>
       </Box>
-
-      {/* <DialogRoot
-        isOpen={onOpen}
-        onClose={onClose}
-        placement={"center"}
-        motionPreset="slide-in-bottom"
-      >
-        <DialogBackdrop />
-
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Update Product</DialogTitle>
-          </DialogHeader>
-
-          <DialogBody>
-            <VStack gap={4}>
-              <Input
-                placeholder="Product Name"
-                name="name"
-                value={updatedProduct.name}
-                onChange={(e) =>
-                  setUpdatedProduct({ ...updatedProduct, name: e.target.value })
-                }
-              />
-              <Input
-                placeholder="Price"
-                name="price"
-                type="number"
-                value={updatedProduct.price}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    price: e.target.value,
-                  })
-                }
-              />
-              <Input
-                placeholder="Image URL"
-                name="image"
-                value={updatedProduct.image}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    image: e.target.value,
-                  })
-                }
-              />
-            </VStack>
-          </DialogBody>
-
-          <DialogFooter>
-            <Button
-              colorPalette="purple"
-              variant={"subtle"}
-              mr={3}
-              onClick={() => handleUpdateProduct(product._id, updatedProduct)}
-            >
-              Update
-            </Button>
-            <Button colorPalette="red" variant="subtle" onClick={onClose}>
-              Cancel
-            </Button>
-          </DialogFooter>
-          <DialogCloseTrigger />
-        </DialogContent>
-      </DialogRoot> */}
     </Box>
   );
 };
