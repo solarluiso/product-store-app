@@ -2,7 +2,7 @@
 
 ![Demo App](/frontend/public/demo.png)
 
-About This App:
+### About This App:
 
 - ⚛️ Tech Stack: React.js, Node.js, Express.js, MongoDB, Chakra UI
 - 🔥 API building
@@ -28,5 +28,3 @@ npm run build
 ```shell
 npm run start
 ```
-
-### I'll see you in the next one! 🚀
