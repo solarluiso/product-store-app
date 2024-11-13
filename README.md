@@ -1,4 +1,4 @@
-<h1 align="center">Product Store App 🚀</h1>
+<h1 align="center">Product Store App</h1>
 
 ![Demo App](/frontend/public/demo.png)
 
