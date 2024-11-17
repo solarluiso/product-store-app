@@ -8,6 +8,9 @@ import {
   IconButton,
   Image,
   Input,
+  Text,
+} from "@chakra-ui/react";
+import {
   DialogRoot,
   DialogTrigger,
   DialogCloseTrigger,
@@ -17,8 +20,7 @@ import {
   DialogBody,
   DialogContent,
   DialogFooter,
-  Text,
-} from "@chakra-ui/react";
+} from "../components/ui/dialog";
 import { useColorModeValue } from "../components/ui/color-mode";
 import { toaster } from "../components/ui/toaster";
 import { useProductStore } from "../store/product";
